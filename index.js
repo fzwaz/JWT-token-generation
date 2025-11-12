@@ -49,7 +49,7 @@ app.post('/login',async (req,res)=>{
         id:user.id,
         username:user.username
     }
-    const secertkey = process.env.secertkey;
+    const secertkey = process.env.JWT_SECRET;
     const options = {expiresIn :'1h'};
 
     const token = jwt.sign(payload , secertkey,options);
@@ -61,4 +61,13 @@ app.post('/login',async (req,res)=>{
     });
 
     res.json({message:'login successfully!'});
+});
+
+app.get('/protected',(req,res)=>{
+    const token = req.cookies.authToken;
+    if(!token){
+        return res.status(401).json({ message: 'No token found' });
+    };
+
+    const decoded = jwt.verify(token,process.env.JWT_SECRET)
 });
