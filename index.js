@@ -19,7 +19,7 @@ app.post('/register',async (req,res)=>{
     return res.status(400).json({ message: 'Username and password are required' });
     }
     const existingUser = users.find(u=>u.username === username);
-    if(!existingUser){
+    if(existingUser){
         return res.status(400).json({ message: 'Username already exists' });
     }
 
