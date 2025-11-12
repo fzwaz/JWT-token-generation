@@ -45,5 +45,20 @@ app.post('/login',async (req,res)=>{
     const isValid = await bcrypt.compare(password , user.password);
     if (!isValid) return res.status(401).json({ message: 'Invalid credentials' });
 
-    
+    const payload = {
+        id:user.id,
+        username:user.username
+    }
+    const secertkey = process.env.secertkey;
+    const options = {expiresIn :'1h'};
+
+    const token = jwt.sign(payload , secertkey,options);
+
+    res.cookie('authToken',token,{
+        httpOnly:true,
+        secure:true,
+        sameSite:'strict',
+    });
+
+    res.json({message:'login successfully!'});
 });
