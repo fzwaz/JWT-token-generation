@@ -69,5 +69,17 @@ app.get('/protected',(req,res)=>{
         return res.status(401).json({ message: 'No token found' });
     };
 
-    const decoded = jwt.verify(token,process.env.JWT_SECRET)
+    try {
+        const decoded = jwt.verify(token,process.env.JWT_SECRET);
+        res.json({message:"Welcome to the protected route!"});
+    } catch (error) {
+        res.status(401).json({message:"Invalid or expired token"})
+    }
 });
+
+app.post('/logout',(req,res)=>{
+    res.clearCookie('authToken');
+    res.json({message:"Logged out successfully!"});
+})
+
+app.listen(PORT,()=> console.log(`✅ Server running on http://localhost:${PORT}`))
